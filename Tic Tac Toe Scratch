@@ -1,0 +1,68 @@
+#Good work little bro. Now, try some function stuff out. Try separating the game logic into different 
+# functions so it's really readable as to what's happening at each point in the while loop, and try 
+# to move repetitive code into functions.
+import numpy as np
+
+turn = 0
+player = 1
+gameboard = np.array([["1", "2","3"], ["4", "5", "6"], ["7", "8", "9"]], dtype=object)
+winner = 0
+row = 0
+column = 0
+
+def determine_turn():
+    global turn
+    global player
+    turn+=1
+    if turn%2 != 0:
+        player = 2
+    else:
+        player = 1
+
+def calculate_winner(threeinarow):
+    global winner
+    for i in threeinarow:
+        if len(set(i)) == 1:
+            if player == 1:
+                print("X beat the shit out of O!")
+                winner = 1
+            else:
+                print("O beat the shit out of X!")
+                winner = 2
+
+def full_check_win(gameboard):
+    calculate_winner(gameboard)
+    vertical = [list(row) for row in zip(*gameboard)]
+    calculate_winner(vertical)
+    diagonals = (np.diag(gameboard), np.diagonal(np.fliplr(gameboard)))
+    calculate_winner(diagonals)
+
+while True:
+    determine_turn()
+    print(gameboard)
+    full_check_win(gameboard)
+    if winner != 0:
+        break
+    if turn == 10:
+        print("Draw")
+        break
+    options = [0,1,2]
+    while True:
+        try:
+            row = int(input("Pick a row(horizontal) 1-3 to place your X/O\n"))-1
+            column = int(input("Pick a column(vertical) 1-3 to place your X/O\n"))-1
+            if row in options and column in options:
+                break 
+            print("Pick between 1-3 dumbass")
+        except ValueError:
+            print("Type in a number between 1-3 dawg") 
+    while gameboard[row][column]=="X" or  gameboard[row][column]=="O":
+        print("Taken dumbass, pick again")
+        row = int(input("Pick a row(horizontal) 1-3 to place your X/O\n"))-1
+        column = int(input("Pick a column(vertical) 1-3 to place your X/O\n"))-1
+        if gameboard[row][column]!="X" and gameboard[row][column]!="O":
+            break    
+    if player == 1:
+        gameboard[row][column]='O'
+    else: 
+        gameboard[row][column]='X'
